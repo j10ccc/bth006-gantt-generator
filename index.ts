@@ -9,9 +9,12 @@ interface Task {
   time: number; // days(ceil int)
 }
 
-const sheets = xlsx.parse(process.argv[2]);
+if (process.argv.length <= 3) {
+  throw new Error("Invalid command. Use: bun start <file> <sheet>")
+}
 
-const data = sheets.find(sheet => sheet.name === "修订版3.0")!.data
+const sheets = xlsx.parse(process.argv[2]);
+const data = sheets.find(sheet => sheet.name === process.argv[3])!.data
 
 const tasks: Task[] = [];
 
