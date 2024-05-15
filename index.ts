@@ -45,9 +45,23 @@ function createSection(phase: Task["phase"], options: {
   const progress = new Map<Task["country"], string>();
   let section = ""
   const tmp = tasks.filter(task => task.phase === phase);
+
+  // 为了优化图像，如果前面的任务和当前任务是同一个国家的，那么合并任务
+  const merged = tmp.reduce((arr, task) => {
+    if (task.country === arr[arr.length - 1]?.country) {
+      const t = arr[arr.length - 1];
+      t.anchor += `_${task.anchor}`
+      t.name += `, ${task.name}`
+      t.time += task.time
+    } else {
+      arr.push(task);
+    }
+    return arr;
+  }, [] as Task[]);
+
   let currentTaskId: string | undefined = options.continueTask;
 
-  tmp.forEach(task => {
+  merged.forEach(task => {
     const previousWork = progress.get(task.country);
     const taskId = (task.phase + "_" + task.anchor.split(".").join("")).split(" ").join("");
 
