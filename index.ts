@@ -39,7 +39,9 @@ for (let i = 0 + 3; i < 30 + 3; i++) {
 }
 
 function createSection(phase: Task["phase"], options: {
+  /* 开始日期 */
   startDate?: string,
+  /* 紧接的上一个任务，不指定开始日期的时候用 */
   continueTask?: string
 }) {
   const progress = new Map<Task["country"], string>();
@@ -82,12 +84,20 @@ function createSection(phase: Task["phase"], options: {
   return [section, currentTaskId];
 }
 
+// 指定一个开始时间
 const [analysisSection, lastAnalysisTask] = createSection("Analysis", { startDate: "2024-04-16" });
-const [designSection, lastDesignTask] = createSection("Design", { continueTask: lastAnalysisTask });
-const [developmentSection, lastDevelopmentTask] = createSection("Development", { continueTask: lastDesignTask });
-const [testPlanningSection] = createSection("Test Planning", { continueTask: lastDesignTask });
-const [testExecutionSection] = createSection("Test Execution", { continueTask: lastDevelopmentTask });
 
+// 紧接着 Analysis 执行
+const [designSection, lastDesignTask] = createSection("Design", { continueTask: lastAnalysisTask });
+
+// 紧接着 Design 执行
+const [developmentSection, lastDevelopmentTask] = createSection("Development", { continueTask: lastDesignTask });
+
+// 紧接着 Design 执行，即和 Development 并行
+const [testPlanningSection] = createSection("Test Planning", { continueTask: lastDesignTask });
+
+// 在 Development 后执行，因为设计上 Development 的周期比 Test Planning 长
+const [testExecutionSection] = createSection("Test Execution", { continueTask: lastDevelopmentTask });
 
 const gantt = `gantt
     title A Gantt Diagram
