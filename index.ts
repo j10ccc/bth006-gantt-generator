@@ -38,13 +38,14 @@ for (let i = 0 + 3; i < 30 + 3; i++) {
   }
 }
 
-const phases: Task["phase"][] = ["Analysis", "Design", "Development", "Test Planning", "Test Execution"];
-
-const sections = phases.map(phase => {
+function createSection(phase: Task["phase"], options: {
+  startDate?: string,
+  continueTask?: string
+}) {
   const progress = new Map<Task["country"], string>();
-  const startDate = "2024-01-01";
   let section = ""
   const tmp = tasks.filter(task => task.phase === phase);
+  let currentTaskId: string | undefined = options.continueTask;
 
   tmp.forEach(task => {
     const previousWork = progress.get(task.country);
@@ -53,25 +54,39 @@ const sections = phases.map(phase => {
     if (previousWork) {
       section += `
         [${task.country}]${task.name} :${taskId}, after ${previousWork}, ${task.time}d`;
+    } else if (options.continueTask) {
+      section += `
+        [${task.country}]${task.name} :${taskId}, after ${options.continueTask}, ${task.time}d`;
     } else {
       section += `
-        [${task.country}]${task.name} :${taskId}, ${startDate}, ${task.time}d`;
+        [${task.country}]${task.name} :${taskId}, ${options.startDate}, ${task.time}d`;
     }
     progress.set(task.country, taskId);
+    currentTaskId = taskId;
   })
 
-  return section;
-})
+  return [section, currentTaskId];
+}
+
+const [analysisSection, lastAnalysisTask] = createSection("Analysis", { startDate: "2024-04-16" });
+const [designSection, lastDesignTask] = createSection("Design", { continueTask: lastAnalysisTask });
+const [developmentSection, lastDevelopmentTask] = createSection("Development", { continueTask: lastDesignTask });
+const [testPlanningSection] = createSection("Test Planning", { continueTask: lastDesignTask });
+const [testExecutionSection] = createSection("Test Execution", { continueTask: lastDevelopmentTask });
+
 
 const gantt = `gantt
     title A Gantt Diagram
     dateFormat YYYY-MM-DD
+    tickInterval 1month
+    axisFormat %Y-%m
     excludes weekends
-    section Analysis ${sections[0]}
-    section Design ${sections[1]}
-    section Development ${sections[2]}
-    section Test Planning ${sections[3]}
-    section Test Execution ${sections[4]}
+
+    section Analysis ${analysisSection}
+    section Design ${designSection}
+    section Development ${developmentSection}
+    section Test Planning ${testPlanningSection}
+    section Test Execution ${testExecutionSection}
 `;
 
 console.log(gantt);
