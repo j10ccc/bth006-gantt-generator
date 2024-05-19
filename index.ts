@@ -26,7 +26,7 @@ for (let i = 0 + 3; i < 30 + 3; i++) {
     if (data[1][j]) phase = data[1][j];
 
     const count = data[i][j];
-    const peopleCount = data[42][j];
+    const peopleCount = data[34][j];
 
     if (count) {
       tasks.push({
@@ -35,7 +35,7 @@ for (let i = 0 + 3; i < 30 + 3; i++) {
         name: data[i][1],
         country: data[2][j],
         personMonth: count,
-        time: peopleCount ? Math.ceil(count / data[42][j] * 31) : -1
+        time: peopleCount ? Math.ceil(count / peopleCount * 31) : -1
       })
     }
   }
