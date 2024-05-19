@@ -1,4 +1,4 @@
-# bth007 Gantt Chart generator
+# bth007 Gantt chart generator
 
 For bth007, create a gantt chart following the task assignment
 of your team.
@@ -16,8 +16,8 @@ to [Live Editor](https://mermaid.live/edit) to preview.
 > [!NOTE]
 > There some rules in the gantt creation
 > 
-> - Tasks are be ordered by their indexes, declare in `ID` column of the xlsx.
-> - For compact layout, tasks that are adjacent and executed by the same country will be displayed as merged.
+> - Tasks are ordered by their indexes declared in `ID` column of the xlsx.
+> - For more compact layout, tasks that are adjacent and executed by the same country will be displayed as merged.
 
 ## Get Started
 
@@ -60,5 +60,5 @@ const gantt = `gantt
 
 ![xlsx-screenshot](/images/xlsx-example.png)
 
-![gantt-screenshot](./images/gantt-example.png)
+![gantt-screenshot](/images/gantt-example.png)
 
